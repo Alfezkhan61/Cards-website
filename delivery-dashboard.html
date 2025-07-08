@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Dashboard - FoodWise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>FoodWise</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="delivery-dashboard.html" class="nav-link">Dashboard</a></li>
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item">
+                    <span class="user-info">
+                        <span class="user-name" id="userName"></span>
+                        <span class="user-status" id="userStatus">Available</span>
+                    </span>
+                </li>
+                <li class="nav-item"><button onclick="logout()" class="btn btn-outline">Logout</button></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Delivery Dashboard</h1>
+                <p class="dashboard-subtitle">Transport verified food donations to those in need</p>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Quick Stats -->
+                <div class="stats-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="stat-number" id="totalDeliveries">0</div>
+                            <div class="stat-label">Total Deliveries</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-number" id="completedDeliveries">0</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-number" id="activeDeliveries">0</div>
+                            <div class="stat-label">In Progress</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-number" id="mealsDelivered">0</div>
+                            <div class="stat-label">Meals Delivered</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="main-grid">
+                    <!-- Map View -->
+                    <div class="card map-view">
+                        <h2 class="card-title">
+                            <i class="fas fa-map"></i>
+                            Delivery Map
+                        </h2>
+                        <div class="map-container" id="mapContainer">
+                            <div class="mock-map">
+                                <div class="map-marker pickup" style="top: 30%; left: 40%;" data-type="pickup">
+                                    <i class="fas fa-store"></i>
+                                    <span class="marker-tooltip">Green Eats Restaurant - Ready for pickup</span>
+                                </div>
+                                <div class="map-marker dropoff" style="top: 60%; left: 70%;" data-type="dropoff">
+                                    <i class="fas fa-home"></i>
+                                    <span class="marker-tooltip">Community Center - Delivery destination</span>
+                                </div>
+                                <div class="map-marker delivery-agent" style="top: 45%; left: 55%;" data-type="agent">
+                                    <i class="fas fa-truck"></i>
+                                    <span class="marker-tooltip">Your location</span>
+                                </div>
+                            </div>
+                            <div class="map-legend">
+                                <div class="legend-item">
+                                    <span class="legend-marker pickup"><i class="fas fa-store"></i></span>
+                                    <span>Pickup Location</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-marker dropoff"><i class="fas fa-home"></i></span>
+                                    <span>Delivery Destination</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-marker delivery-agent"><i class="fas fa-truck"></i></span>
+                                    <span>Your Location</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Available Pickups -->
+                    <div class="card available-pickups">
+                        <h2 class="card-title">
+                            <i class="fas fa-box"></i>
+                            Available Pickups
+                        </h2>
+                        <div class="filters">
+                            <select id="distanceFilter">
+                                <option value="">All Distances</option>
+                                <option value="5">Within 5 km</option>
+                                <option value="10">Within 10 km</option>
+                                <option value="20">Within 20 km</option>
+                            </select>
+                            <select id="urgencyFilter">
+                                <option value="">All Urgency</option>
+                                <option value="urgent">Urgent (within 1 hour)</option>
+                                <option value="soon">Soon (within 4 hours)</option>
+                                <option value="today">Today</option>
+                            </select>
+                        </div>
+                        <div id="availablePickupsList" class="pickups-list">
+                            <!-- Pickups will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Deliveries -->
+                <div class="card active-deliveries" id="activeDeliveriesCard" style="display: none;">
+                    <h2 class="card-title">
+                        <i class="fas fa-route"></i>
+                        Active Deliveries
+                    </h2>
+                    <div id="activeDeliveriesList" class="deliveries-list">
+                        <!-- Active deliveries will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Delivery History -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-history"></i>
+                        Delivery History
+                    </h2>
+                    <div class="table-container">
+                        <table class="deliveries-table">
+                            <thead>
+                                <tr>
+                                    <th>Food Item</th>
+                                    <th>Pickup Location</th>
+                                    <th>Delivery Date</th>
+                                    <th>Status</th>
+                                    <th>Verification</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deliveriesTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delivery Confirmation Modal -->
+    <div id="deliveryModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Delivery Completion</h3>
+                <button onclick="closeDeliveryModal()" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="deliveryInfo"></div>
+                <form id="deliveryForm">
+                    <input type="hidden" id="completingDeliveryId">
+                    
+                    <div class="form-group">
+                        <label for="deliveryNotes">Delivery Notes</label>
+                        <textarea id="deliveryNotes" name="deliveryNotes" rows="3" required
+                                  placeholder="Describe the delivery process, recipient feedback, any issues..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deliveryPhoto">Delivery Confirmation Photo</label>
+                        <input type="file" id="deliveryPhoto" name="deliveryPhoto" accept="image/*" required>
+                        <small>Take a photo to confirm successful delivery</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recipientName">Recipient Name/Organization</label>
+                        <input type="text" id="recipientName" name="recipientName" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" onclick="closeDeliveryModal()" class="btn btn-outline">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Confirm Delivery</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check authentication
+        const currentUser = getCurrentUser();
+        if (!currentUser || currentUser.role !== 'delivery') {
+            window.location.href = 'login.html';
+        }
+
+        // Display user info
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userStatus').textContent = 'Available';
+
+        // Load available pickups
+        function loadAvailablePickups() {
+            const donations = getFromStorage('donations') || [];
+            const availablePickups = donations.filter(d => d.status === 'verified' && !d.deliveryId);
+            
+            const pickupsList = document.getElementById('availablePickupsList');
+            
+            if (availablePickups.length === 0) {
+                pickupsList.innerHTML = '<p class="no-data">No verified donations available for pickup at the moment.</p>';
+            } else {
+                pickupsList.innerHTML = availablePickups.map(pickup => {
+                    const timeUntilPickup = Math.floor((new Date(pickup.pickupTime) - new Date()) / (1000 * 60 * 60));
+                    const urgency = timeUntilPickup <= 1 ? 'urgent' : timeUntilPickup <= 4 ? 'soon' : 'normal';
+                    
+                    return `
+                        <div class="pickup-card" data-id="${pickup.id}">
+                            <div class="pickup-header">
+                                <h4>${pickup.foodName}</h4>
+                                <span class="urgency urgency-${urgency}">
+                                    ${urgency === 'urgent' ? 'URGENT' : urgency === 'soon' ? 'SOON' : 'TODAY'}
+                                </span>
+                            </div>
+                            <div class="pickup-details">
+                                <p><i class="fas fa-store"></i> ${pickup.businessName || pickup.donorName}</p>
+                                <p><i class="fas fa-box"></i> ${pickup.quantity}</p>
+                                <p><i class="fas fa-clock"></i> Pickup: ${formatDate(pickup.pickupTime)}</p>
+                                <p><i class="fas fa-map-marker-alt"></i> ${pickup.location.substring(0, 50)}...</p>
+                                <p><i class="fas fa-route"></i> Est. distance: ${Math.floor(Math.random() * 15) + 1} km</p>
+                                ${pickup.verificationData?.verificationNotes ? 
+                                    `<p><i class="fas fa-info-circle"></i> ${pickup.verificationData.verificationNotes.substring(0, 80)}...</p>` : ''}
+                            </div>
+                            <div class="pickup-actions">
+                                <button onclick="acceptPickup('${pickup.id}')" class="btn btn-primary">
+                                    <i class="fas fa-check"></i> Accept Pickup
+                                </button>
+                                <button onclick="viewPickupDetails('${pickup.id}')" class="btn btn-outline">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Accept pickup
+        function acceptPickup(donationId) {
+            const donations = getFromStorage('donations') || [];
+            const donationIndex = donations.findIndex(d => d.id === donationId);
+            
+            if (donationIndex !== -1) {
+                donations[donationIndex].deliveryId = currentUser.id;
+                donations[donationIndex].status = 'in_transit';
+                donations[donationIndex].pickupTime = new Date().toISOString();
+                
+                saveToStorage('donations', donations);
+                
+                showMessage('Pickup accepted! The donation is now assigned to you.', 'success');
+                
+                // Refresh displays
+                loadAvailablePickups();
+                loadActiveDeliveries();
+                updateStats();
+            }
+        }
+
+        // View pickup details
+        function viewPickupDetails(donationId) {
+            const donations = getFromStorage('donations') || [];
+            const donation = donations.find(d => d.id === donationId);
+            
+            if (donation) {
+                const users = getFromStorage('users') || [];
+                const donor = users.find(u => u.id === donation.donorId);
+                const volunteer = users.find(u => u.id === donation.volunteerId);
+                
+                alert(`
+Food Item: ${donation.foodName}
+Quantity: ${donation.quantity}
+Donor: ${donor ? donor.name : 'Unknown'} (${donation.businessName || 'N/A'})
+Pickup Time: ${formatDate(donation.pickupTime)}
+Location: ${donation.location}
+Contact: ${donation.contactNumber}
+
+Verification by: ${volunteer ? volunteer.name : 'Unknown'}
+Food Condition: ${donation.verificationData?.foodCondition || 'N/A'}
+Verification Notes: ${donation.verificationData?.verificationNotes || 'No notes'}
+
+Description: ${donation.description || 'No description'}
+                `);
+            }
+        }
+
+        // Load active deliveries
+        function loadActiveDeliveries() {
+            const donations = getFromStorage('donations') || [];
+            const activeDeliveries = donations.filter(d => d.deliveryId === currentUser.id && d.status === 'in_transit');
+            
+            const activeCard = document.getElementById('activeDeliveriesCard');
+            const deliveriesList = document.getElementById('activeDeliveriesList');
+            
+            if (activeDeliveries.length === 0) {
+                activeCard.style.display = 'none';
+            } else {
+                activeCard.style.display = 'block';
+                deliveriesList.innerHTML = activeDeliveries.map(delivery => `
+                    <div class="delivery-card">
+                        <div class="delivery-header">
+                            <h4>${delivery.foodName}</h4>
+                            <span class="status status-in_transit">In Transit</span>
+                        </div>
+                        <div class="delivery-details">
+                            <p><i class="fas fa-store"></i> From: ${delivery.businessName || delivery.donorName}</p>
+                            <p><i class="fas fa-box"></i> ${delivery.quantity}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> ${delivery.location.substring(0, 50)}...</p>
+                            <p><i class="fas fa-clock"></i> Picked up: ${formatDate(delivery.pickupTime)}</p>
+                        </div>
+                        <div class="delivery-actions">
+                            <button onclick="completeDelivery('${delivery.id}')" class="btn btn-primary">
+                                <i class="fas fa-check-circle"></i> Complete Delivery
+                            </button>
+                            <button onclick="getDirections('${delivery.id}')" class="btn btn-outline">
+                                <i class="fas fa-directions"></i> Get Directions
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Complete delivery
+        function completeDelivery(donationId) {
+            const donations = getFromStorage('donations') || [];
+            const donation = donations.find(d => d.id === donationId);
+            
+            if (donation) {
+                document.getElementById('completingDeliveryId').value = donationId;
+                document.getElementById('deliveryInfo').innerHTML = `
+                    <div class="delivery-summary">
+                        <h4>Completing Delivery: ${donation.foodName}</h4>
+                        <p><strong>From:</strong> ${donation.businessName || donation.donorName}</p>
+                        <p><strong>Quantity:</strong> ${donation.quantity}</p>
+                        <p><strong>Pickup Location:</strong> ${donation.location}</p>
+                    </div>
+                `;
+                
+                document.getElementById('deliveryModal').style.display = 'flex';
+            }
+        }
+
+        // Close delivery modal
+        function closeDeliveryModal() {
+            document.getElementById('deliveryModal').style.display = 'none';
+            document.getElementById('deliveryForm').reset();
+        }
+
+        // Handle delivery completion form
+        document.getElementById('deliveryForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const deliveryData = Object.fromEntries(formData);
+            
+            const donationId = deliveryData.completingDeliveryId;
+            
+            // Update donation status
+            const donations = getFromStorage('donations') || [];
+            const donationIndex = donations.findIndex(d => d.id === donationId);
+            
+            if (donationIndex !== -1) {
+                donations[donationIndex].status = 'delivered';
+                donations[donationIndex].deliveryDate = new Date().toISOString();
+                donations[donationIndex].deliveryData = deliveryData;
+                
+                saveToStorage('donations', donations);
+                
+                showMessage('Delivery completed successfully! Thank you for your service.', 'success');
+                
+                // Close modal and refresh displays
+                closeDeliveryModal();
+                loadActiveDeliveries();
+                loadDeliveryHistory();
+                updateStats();
+            }
+        });
+
+        // Get directions (mock)
+        function getDirections(donationId) {
+            showMessage('Opening directions in your default maps app...', 'info');
+            // In a real app, this would open Google Maps or similar with directions
+        }
+
+        // Load delivery history
+        function loadDeliveryHistory() {
+            const donations = getFromStorage('donations') || [];
+            const myDeliveries = donations.filter(d => d.deliveryId === currentUser.id);
+            
+            const tableBody = document.getElementById('deliveriesTableBody');
+            
+            if (myDeliveries.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="no-data">No deliveries yet</td></tr>';
+            } else {
+                const users = getFromStorage('users') || [];
+                
+                tableBody.innerHTML = myDeliveries.reverse().map(delivery => {
+                    const volunteer = users.find(u => u.id === delivery.volunteerId);
+                    
+                    return `
+                        <tr>
+                            <td>
+                                <div class="food-item">
+                                    <div>
+                                        <strong>${delivery.foodName}</strong>
+                                        <br><small>${delivery.quantity}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${delivery.location.substring(0, 40)}...</td>
+                            <td>${delivery.deliveryDate ? formatDate(delivery.deliveryDate) : 'In Progress'}</td>
+                            <td><span class="status status-${delivery.status}">${delivery.status.replace('_', ' ').charAt(0).toUpperCase() + delivery.status.replace('_', ' ').slice(1)}</span></td>
+                            <td>${volunteer ? volunteer.name : 'Unknown'}</td>
+                            <td>
+                                <div class="actions">
+                                    <button onclick="viewDeliveryDetails('${delivery.id}')" class="btn-small btn-outline">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // View delivery details
+        function viewDeliveryDetails(donationId) {
+            const donations = getFromStorage('donations') || [];
+            const delivery = donations.find(d => d.id === donationId);
+            
+            if (delivery) {
+                alert(`
+Food: ${delivery.foodName}
+Quantity: ${delivery.quantity}
+Pickup: ${formatDate(delivery.pickupTime)}
+${delivery.deliveryDate ? `Delivered: ${formatDate(delivery.deliveryDate)}` : 'Status: In Progress'}
+Location: ${delivery.location}
+${delivery.deliveryData?.recipientName ? `Recipient: ${delivery.deliveryData.recipientName}` : ''}
+${delivery.deliveryData?.deliveryNotes ? `Notes: ${delivery.deliveryData.deliveryNotes}` : ''}
+                `);
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const donations = getFromStorage('donations') || [];
+            const myDeliveries = donations.filter(d => d.deliveryId === currentUser.id);
+            
+            const totalDeliveries = myDeliveries.length;
+            const completedDeliveries = myDeliveries.filter(d => d.status === 'delivered').length;
+            const activeDeliveries = myDeliveries.filter(d => d.status === 'in_transit').length;
+            const mealsDelivered = completedDeliveries * 20; // Estimate 20 meals per delivery
+            
+            document.getElementById('totalDeliveries').textContent = totalDeliveries;
+            document.getElementById('completedDeliveries').textContent = completedDeliveries;
+            document.getElementById('activeDeliveries').textContent = activeDeliveries;
+            document.getElementById('mealsDelivered').textContent = mealsDelivered;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAvailablePickups();
+            loadActiveDeliveries();
+            loadDeliveryHistory();
+            updateStats();
+        });
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            loadAvailablePickups();
+            loadActiveDeliveries();
+            updateStats();
+        }, 30000);
+    </script>
+
+    <style>
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .user-name {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .user-status {
+            background: var(--light-green);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .map-container {
+            position: relative;
+            height: 400px;
+            background: #f0f9ff;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .mock-map {
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            position: relative;
+        }
+
+        .map-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .map-marker:hover {
+            transform: scale(1.2);
+        }
+
+        .map-marker.pickup {
+            background: var(--primary-green);
+        }
+
+        .map-marker.dropoff {
+            background: var(--accent-orange);
+        }
+
+        .map-marker.delivery-agent {
+            background: #1d4ed8;
+        }
+
+        .marker-tooltip {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark-gray);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 6px;
+            white-space: nowrap;
+            font-size: 0.8rem;
+            display: none;
+            z-index: 10;
+        }
+
+        .map-marker:hover .marker-tooltip {
+            display: block;
+        }
+
+        .map-legend {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .legend-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .pickup-card, .delivery-card {
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .pickup-card:hover, .delivery-card:hover {
+            box-shadow: var(--shadow-medium);
+        }
+
+        .pickup-header, .delivery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .pickup-header h4, .delivery-header h4 {
+            color: var(--primary-green);
+            margin: 0;
+        }
+
+        .urgency {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .urgency-urgent {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .urgency-soon {
+            background: var(--light-orange);
+            color: var(--accent-orange);
+        }
+
+        .urgency-normal {
+            background: #dcfce7;
+            color: var(--primary-green);
+        }
+
+        .pickup-details, .delivery-details {
+            margin-bottom: 1rem;
+        }
+
+        .pickup-details p, .delivery-details p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pickup-details i, .delivery-details i {
+            width: 16px;
+            color: var(--accent-orange);
+        }
+
+        .pickup-actions, .delivery-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .status-in_transit {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius-large);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--primary-green);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .delivery-summary {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .delivery-summary h4 {
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filters select {
+            padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            font-family: var(--font-family);
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-info {
+                flex-direction: row;
+                gap: 1rem;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .pickup-actions, .delivery-actions {
+                flex-direction: column;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</body>
+</html>

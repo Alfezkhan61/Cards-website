@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Register - FoodWise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>FoodWise</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="index.html#about" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="index.html#impact" class="nav-link">Impact</a></li>
+                <li class="nav-item"><a href="index.html#join" class="nav-link">Join</a></li>
+                <li class="nav-item"><a href="login.html" class="nav-link">Login</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login/Register Container -->
+    <div class="form-container">
+        <div class="form-header">
+            <h1 class="form-title" id="formTitle">Welcome to FoodWise</h1>
+            <p class="form-subtitle" id="formSubtitle">Please login to continue</p>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div class="tab-switcher">
+            <button class="tab-btn active" data-tab="login">Login</button>
+            <button class="tab-btn" data-tab="register">Register</button>
+        </div>
+
+        <!-- Role Selection (for registration) -->
+        <div class="role-selection" id="roleSelection" style="display: none;">
+            <h3>Choose Your Role</h3>
+            <div class="role-cards">
+                <div class="role-card" data-role="donor">
+                    <div class="role-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h4>Food Donor</h4>
+                    <p>Restaurant, caterer, or event organizer</p>
+                </div>
+                <div class="role-card" data-role="volunteer">
+                    <div class="role-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4>Student Volunteer</h4>
+                    <p>Verify food quality and earn service hours</p>
+                </div>
+                <div class="role-card" data-role="delivery">
+                    <div class="role-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h4>Delivery Partner</h4>
+                    <p>Transport food to those in need</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-form">
+            <div class="form-group">
+                <label for="loginEmail">Email Address</label>
+                <input type="email" id="loginEmail" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <div class="form-footer">
+                <p>Demo Accounts:</p>
+                <div class="demo-accounts">
+                    <small>Admin: admin@foodwise.org / admin123</small>
+                    <small>Donor: donor@restaurant.com / donor123</small>
+                    <small>Volunteer: volunteer@student.edu / volunteer123</small>
+                    <small>Delivery: delivery@agent.com / delivery123</small>
+                </div>
+            </div>
+        </form>
+
+        <!-- Registration Form -->
+        <form id="registerForm" class="auth-form" style="display: none;">
+            <input type="hidden" id="selectedRole" name="role">
+            
+            <div class="form-group">
+                <label for="registerName">Full Name</label>
+                <input type="text" id="registerName" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">Email Address</label>
+                <input type="email" id="registerEmail" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" name="password" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+
+            <!-- Role-specific fields -->
+            <div id="donorFields" class="role-fields" style="display: none;">
+                <div class="form-group">
+                    <label for="businessName">Business Name</label>
+                    <input type="text" id="businessName" name="businessName">
+                </div>
+                <div class="form-group">
+                    <label for="businessType">Business Type</label>
+                    <select id="businessType" name="businessType">
+                        <option value="">Select Type</option>
+                        <option value="restaurant">Restaurant</option>
+                        <option value="catering">Catering Service</option>
+                        <option value="event">Event Organizer</option>
+                        <option value="grocery">Grocery Store</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="volunteerFields" class="role-fields" style="display: none;">
+                <div class="form-group">
+                    <label for="university">University/Institution</label>
+                    <input type="text" id="university" name="university">
+                </div>
+                <div class="form-group">
+                    <label for="studentId">Student ID</label>
+                    <input type="text" id="studentId" name="studentId">
+                </div>
+            </div>
+
+            <div id="deliveryFields" class="role-fields" style="display: none;">
+                <div class="form-group">
+                    <label for="vehicle">Vehicle Type</label>
+                    <select id="vehicle" name="vehicle">
+                        <option value="">Select Vehicle</option>
+                        <option value="car">Car</option>
+                        <option value="motorcycle">Motorcycle</option>
+                        <option value="bicycle">Bicycle</option>
+                        <option value="van">Van/Truck</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="licenseNumber">License Number</label>
+                    <input type="text" id="licenseNumber" name="licenseNumber">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Register</button>
+            <div class="form-footer">
+                <p><small>By registering, you agree to our Terms of Service and Privacy Policy.</small></p>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.getAttribute('data-tab');
+                
+                // Update active tab
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Show/hide forms
+                if (tab === 'login') {
+                    document.getElementById('loginForm').style.display = 'block';
+                    document.getElementById('registerForm').style.display = 'none';
+                    document.getElementById('roleSelection').style.display = 'none';
+                    document.getElementById('formTitle').textContent = 'Welcome Back';
+                    document.getElementById('formSubtitle').textContent = 'Please login to continue';
+                } else {
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('registerForm').style.display = 'block';
+                    document.getElementById('roleSelection').style.display = 'block';
+                    document.getElementById('formTitle').textContent = 'Join FoodWise';
+                    document.getElementById('formSubtitle').textContent = 'Create your account and start making a difference';
+                }
+            });
+        });
+
+        // Role selection
+        document.querySelectorAll('.role-card').forEach(card => {
+            card.addEventListener('click', () => {
+                // Remove active class from all cards
+                document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked card
+                card.classList.add('active');
+                
+                // Set the selected role
+                const role = card.getAttribute('data-role');
+                document.getElementById('selectedRole').value = role;
+                
+                // Show/hide role-specific fields
+                document.querySelectorAll('.role-fields').forEach(field => {
+                    field.style.display = 'none';
+                });
+                
+                const roleFields = document.getElementById(`${role}Fields`);
+                if (roleFields) {
+                    roleFields.style.display = 'block';
+                }
+            });
+        });
+
+        // Check URL parameters for role selection
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role');
+        if (roleParam) {
+            // Switch to register tab
+            document.querySelector('[data-tab="register"]').click();
+            
+            // Select the role
+            const roleCard = document.querySelector(`[data-role="${roleParam}"]`);
+            if (roleCard) {
+                roleCard.click();
+            }
+        }
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Get users from storage
+            const users = getFromStorage('users') || [];
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                if (user.verified) {
+                    setCurrentUser(user);
+                    showMessage('Login successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        checkAuthAndRedirect();
+                    }, 1000);
+                } else {
+                    showMessage('Your account is pending verification. Please wait for admin approval.', 'error');
+                }
+            } else {
+                showMessage('Invalid email or password. Please try again.', 'error');
+            }
+        });
+
+        // Registration form submission
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const userData = Object.fromEntries(formData);
+            
+            // Validate password confirmation
+            if (userData.password !== userData.confirmPassword) {
+                showMessage('Passwords do not match.', 'error');
+                return;
+            }
+            
+            // Validate email format
+            if (!validateEmail(userData.email)) {
+                showMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+            
+            // Check if role is selected
+            if (!userData.role) {
+                showMessage('Please select your role.', 'error');
+                return;
+            }
+            
+            // Get existing users
+            const users = getFromStorage('users') || [];
+            
+            // Check if email already exists
+            if (users.find(u => u.email === userData.email)) {
+                showMessage('An account with this email already exists.', 'error');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: generateId(),
+                ...userData,
+                verified: userData.role === 'volunteer', // Auto-verify volunteers for demo
+                createdAt: new Date().toISOString(),
+                points: userData.role === 'volunteer' ? 0 : undefined
+            };
+            
+            // Remove confirm password
+            delete newUser.confirmPassword;
+            
+            // Save user
+            users.push(newUser);
+            saveToStorage('users', users);
+            
+            if (newUser.verified) {
+                setCurrentUser(newUser);
+                showMessage('Registration successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    checkAuthAndRedirect();
+                }, 1000);
+            } else {
+                showMessage('Registration successful! Your account is pending admin approval.', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            }
+        });
+
+        // Check if user is already logged in
+        const currentUser = getCurrentUser();
+        if (currentUser && currentUser.verified) {
+            checkAuthAndRedirect();
+        }
+    </script>
+
+    <style>
+        .form-container {
+            max-width: 500px;
+            margin: 100px auto 40px;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: var(--border-radius-large);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-subtitle {
+            color: var(--dark-gray);
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        .tab-switcher {
+            display: flex;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 4px;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--white);
+            color: var(--primary-green);
+            box-shadow: var(--shadow-light);
+        }
+
+        .role-selection {
+            margin-bottom: 2rem;
+        }
+
+        .role-selection h3 {
+            text-align: center;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .role-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .role-card {
+            padding: 1.5rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .role-card:hover,
+        .role-card.active {
+            border-color: var(--light-green);
+            background: #f0f9ff;
+        }
+
+        .role-icon {
+            font-size: 2rem;
+            color: var(--accent-orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .role-card h4 {
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .role-card p {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            opacity: 0.7;
+        }
+
+        .auth-form {
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .demo-accounts {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+        }
+
+        .demo-accounts small {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-family: monospace;
+        }
+
+        .form-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                margin: 80px 20px 20px;
+                padding: 1.5rem;
+            }
+
+            .role-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

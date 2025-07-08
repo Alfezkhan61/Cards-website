@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Dashboard - FoodWise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>FoodWise</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="donor-dashboard.html" class="nav-link">Dashboard</a></li>
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><span class="user-name" id="userName"></span></li>
+                <li class="nav-item"><button onclick="logout()" class="btn btn-outline">Logout</button></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Donor Dashboard</h1>
+                <p class="dashboard-subtitle">Manage your food donations and help reduce waste</p>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Quick Stats -->
+                <div class="stats-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="stat-number" id="totalDonations">0</div>
+                            <div class="stat-label">Total Donations</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-number" id="completedDonations">0</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-number" id="pendingDonations">0</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-number" id="impactMeals">0</div>
+                            <div class="stat-label">Meals Provided</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="main-grid">
+                    <!-- Post New Donation -->
+                    <div class="card">
+                        <h2 class="card-title">
+                            <i class="fas fa-plus-circle"></i>
+                            Post New Food Donation
+                        </h2>
+                        <form id="donationForm" class="donation-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="foodName">Food Name</label>
+                                    <input type="text" id="foodName" name="foodName" required 
+                                           placeholder="e.g., Surplus Sandwiches, Leftover Pizza">
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantity">Quantity</label>
+                                    <input type="text" id="quantity" name="quantity" required 
+                                           placeholder="e.g., 50 pieces, 20 kg, 10 boxes">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" rows="3" 
+                                          placeholder="Describe the food, its condition, and any special instructions"></textarea>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="pickupTime">Pickup Time</label>
+                                    <input type="datetime-local" id="pickupTime" name="pickupTime" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="expiryTime">Best Before</label>
+                                    <input type="datetime-local" id="expiryTime" name="expiryTime">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="location">Pickup Location</label>
+                                <textarea id="location" name="location" rows="2" required 
+                                          placeholder="Full address with any specific pickup instructions"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactNumber">Contact Number</label>
+                                <input type="tel" id="contactNumber" name="contactNumber" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="imageUpload">Food Image (Optional)</label>
+                                <input type="file" id="imageUpload" name="imageUpload" accept="image/*">
+                                <small>Help volunteers identify the food by uploading a photo</small>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Post Donation
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Recent Donations -->
+                    <div class="card">
+                        <h2 class="card-title">
+                            <i class="fas fa-history"></i>
+                            Recent Donations
+                        </h2>
+                        <div id="donationsList" class="donations-list">
+                            <!-- Donations will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Donations Table -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-list"></i>
+                        All Donations History
+                    </h2>
+                    <div class="table-container">
+                        <table class="donations-table">
+                            <thead>
+                                <tr>
+                                    <th>Food Item</th>
+                                    <th>Quantity</th>
+                                    <th>Pickup Time</th>
+                                    <th>Status</th>
+                                    <th>Volunteer</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="donationsTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check authentication
+        const currentUser = getCurrentUser();
+        if (!currentUser || currentUser.role !== 'donor') {
+            window.location.href = 'login.html';
+        }
+
+        // Display user name
+        document.getElementById('userName').textContent = currentUser.name;
+
+        // Set minimum datetime to current time
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('pickupTime').min = now.toISOString().slice(0, 16);
+        document.getElementById('expiryTime').min = now.toISOString().slice(0, 16);
+
+        // Load user's contact info
+        if (currentUser.phone) {
+            document.getElementById('contactNumber').value = currentUser.phone;
+        }
+
+        // Form submission
+        document.getElementById('donationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const donationData = Object.fromEntries(formData);
+            
+            // Validate pickup time is in the future
+            const pickupTime = new Date(donationData.pickupTime);
+            if (pickupTime <= new Date()) {
+                showMessage('Pickup time must be in the future.', 'error');
+                return;
+            }
+            
+            // Create donation object
+            const donation = {
+                id: generateId(),
+                donorId: currentUser.id,
+                donorName: currentUser.name,
+                businessName: currentUser.businessName || currentUser.name,
+                ...donationData,
+                status: 'pending',
+                createdAt: new Date().toISOString(),
+                volunteerId: null,
+                deliveryId: null
+            };
+            
+            // Handle image upload (simulate with placeholder)
+            if (donationData.imageUpload && formData.get('imageUpload').size > 0) {
+                // In a real app, you'd upload to a server
+                donation.imageUrl = 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&h=200&fit=crop';
+            }
+            
+            // Save donation
+            const donations = getFromStorage('donations') || [];
+            donations.push(donation);
+            saveToStorage('donations', donations);
+            
+            showMessage('Donation posted successfully! Volunteers will be notified.', 'success');
+            
+            // Reset form
+            e.target.reset();
+            document.getElementById('contactNumber').value = currentUser.phone;
+            
+            // Refresh displays
+            loadDonations();
+            updateStats();
+        });
+
+        // Load and display donations
+        function loadDonations() {
+            const donations = getFromStorage('donations') || [];
+            const userDonations = donations.filter(d => d.donorId === currentUser.id);
+            
+            // Update recent donations
+            const recentDonations = userDonations.slice(-3).reverse();
+            const donationsList = document.getElementById('donationsList');
+            
+            if (recentDonations.length === 0) {
+                donationsList.innerHTML = '<p class="no-data">No donations yet. Post your first donation above!</p>';
+            } else {
+                donationsList.innerHTML = recentDonations.map(donation => `
+                    <div class="donation-item">
+                        <div class="donation-info">
+                            <h4>${donation.foodName}</h4>
+                            <p><i class="fas fa-box"></i> ${donation.quantity}</p>
+                            <p><i class="fas fa-clock"></i> ${formatDate(donation.pickupTime)}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> ${donation.location.substring(0, 50)}...</p>
+                        </div>
+                        <div class="donation-status">
+                            <span class="status status-${donation.status}">${donation.status.charAt(0).toUpperCase() + donation.status.slice(1)}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Update donations table
+            const tableBody = document.getElementById('donationsTableBody');
+            if (userDonations.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="no-data">No donations found</td></tr>';
+            } else {
+                tableBody.innerHTML = userDonations.reverse().map(donation => {
+                    const users = getFromStorage('users') || [];
+                    const volunteer = donation.volunteerId ? users.find(u => u.id === donation.volunteerId) : null;
+                    
+                    return `
+                        <tr>
+                            <td>
+                                <div class="food-item">
+                                    ${donation.imageUrl ? `<img src="${donation.imageUrl}" alt="${donation.foodName}" class="food-image">` : ''}
+                                    <div>
+                                        <strong>${donation.foodName}</strong>
+                                        ${donation.description ? `<br><small>${donation.description.substring(0, 50)}...</small>` : ''}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${donation.quantity}</td>
+                            <td>${formatDate(donation.pickupTime)}</td>
+                            <td><span class="status status-${donation.status}">${donation.status.charAt(0).toUpperCase() + donation.status.slice(1)}</span></td>
+                            <td>${volunteer ? volunteer.name : '-'}</td>
+                            <td>
+                                <div class="actions">
+                                    <button onclick="viewDonation('${donation.id}')" class="btn-small btn-outline">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    ${donation.status === 'pending' ? `
+                                        <button onclick="editDonation('${donation.id}')" class="btn-small btn-secondary">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const donations = getFromStorage('donations') || [];
+            const userDonations = donations.filter(d => d.donorId === currentUser.id);
+            
+            const totalDonations = userDonations.length;
+            const completedDonations = userDonations.filter(d => d.status === 'delivered').length;
+            const pendingDonations = userDonations.filter(d => d.status === 'pending').length;
+            const impactMeals = completedDonations * 25; // Estimate 25 meals per donation
+            
+            document.getElementById('totalDonations').textContent = totalDonations;
+            document.getElementById('completedDonations').textContent = completedDonations;
+            document.getElementById('pendingDonations').textContent = pendingDonations;
+            document.getElementById('impactMeals').textContent = impactMeals;
+        }
+
+        // View donation details
+        function viewDonation(donationId) {
+            const donations = getFromStorage('donations') || [];
+            const donation = donations.find(d => d.id === donationId);
+            
+            if (donation) {
+                alert(`
+Food: ${donation.foodName}
+Quantity: ${donation.quantity}
+Description: ${donation.description || 'No description'}
+Pickup Time: ${formatDate(donation.pickupTime)}
+Location: ${donation.location}
+Status: ${donation.status.charAt(0).toUpperCase() + donation.status.slice(1)}
+Created: ${formatDate(donation.createdAt)}
+                `);
+            }
+        }
+
+        // Edit donation (simplified - in a real app, you'd have a proper edit form)
+        function editDonation(donationId) {
+            showMessage('Edit functionality would open a modal or new page with the donation form pre-filled.', 'info');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDonations();
+            updateStats();
+        });
+    </script>
+
+    <style>
+        .user-name {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .stats-section {
+            margin-bottom: 2rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .donation-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .donations-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .donation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+        }
+
+        .donation-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .donation-info h4 {
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .donation-info p {
+            margin: 0.25rem 0;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            opacity: 0.8;
+        }
+
+        .donation-info i {
+            width: 16px;
+            color: var(--accent-orange);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .donations-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .donations-table th,
+        .donations-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .donations-table th {
+            background: var(--light-gray);
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .food-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .food-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-small.btn-outline {
+            background: transparent;
+            color: var(--primary-green);
+            border: 1px solid var(--primary-green);
+        }
+
+        .btn-small.btn-secondary {
+            background: var(--light-green);
+            color: white;
+        }
+
+        .no-data {
+            text-align: center;
+            color: var(--dark-gray);
+            opacity: 0.7;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .donation-form .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .donation-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .donations-table {
+                font-size: 0.8rem;
+            }
+
+            .donations-table th,
+            .donations-table td {
+                padding: 0.5rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

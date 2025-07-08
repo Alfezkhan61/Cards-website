@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Dashboard - FoodWise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>FoodWise</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="volunteer-dashboard.html" class="nav-link">Dashboard</a></li>
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item">
+                    <span class="user-info">
+                        <span class="user-name" id="userName"></span>
+                        <span class="user-points" id="userPoints">0 pts</span>
+                    </span>
+                </li>
+                <li class="nav-item"><button onclick="logout()" class="btn btn-outline">Logout</button></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Volunteer Dashboard</h1>
+                <p class="dashboard-subtitle">Verify food donations and earn community service hours</p>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Quick Stats -->
+                <div class="stats-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-number" id="totalVerifications">0</div>
+                            <div class="stat-label">Verifications</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-number" id="volunteerPoints">0</div>
+                            <div class="stat-label">Points Earned</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-number" id="serviceHours">0</div>
+                            <div class="stat-label">Service Hours</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="stat-number" id="volunteerRank">#-</div>
+                            <div class="stat-label">Leaderboard Rank</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="main-grid">
+                    <!-- Available Donations -->
+                    <div class="card available-donations">
+                        <h2 class="card-title">
+                            <i class="fas fa-list-ul"></i>
+                            Available Donations
+                        </h2>
+                        <div class="filters">
+                            <select id="locationFilter">
+                                <option value="">All Locations</option>
+                                <option value="downtown">Downtown</option>
+                                <option value="midtown">Midtown</option>
+                                <option value="uptown">Uptown</option>
+                            </select>
+                            <select id="timeFilter">
+                                <option value="">All Times</option>
+                                <option value="today">Today</option>
+                                <option value="tomorrow">Tomorrow</option>
+                                <option value="week">This Week</option>
+                            </select>
+                        </div>
+                        <div id="availableDonationsList" class="donations-list">
+                            <!-- Donations will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Verification Form -->
+                    <div class="card verification-form" id="verificationForm" style="display: none;">
+                        <h2 class="card-title">
+                            <i class="fas fa-clipboard-check"></i>
+                            Verify Donation
+                        </h2>
+                        <div id="selectedDonationInfo" class="donation-info-card"></div>
+                        <form id="verifyForm">
+                            <input type="hidden" id="selectedDonationId">
+                            
+                            <div class="form-group">
+                                <label for="foodCondition">Food Condition</label>
+                                <select id="foodCondition" name="foodCondition" required>
+                                    <option value="">Select condition</option>
+                                    <option value="excellent">Excellent - Fresh and perfect</option>
+                                    <option value="good">Good - Still fresh, minor imperfections</option>
+                                    <option value="fair">Fair - Acceptable but needs quick distribution</option>
+                                    <option value="poor">Poor - Not suitable for donation</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="actualQuantity">Actual Quantity Found</label>
+                                <input type="text" id="actualQuantity" name="actualQuantity" required 
+                                       placeholder="Confirm or correct the quantity">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="verificationNotes">Verification Notes</label>
+                                <textarea id="verificationNotes" name="verificationNotes" rows="4" required
+                                          placeholder="Describe the food condition, any issues, and recommendations for delivery"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="verificationPhoto">Verification Photo</label>
+                                <input type="file" id="verificationPhoto" name="verificationPhoto" accept="image/*" required>
+                                <small>Take a photo to document the food condition</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="recommendDelivery">Recommend for Delivery?</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="recommendDelivery" value="yes" required>
+                                        <span>Yes - Food is suitable for delivery</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="recommendDelivery" value="no" required>
+                                        <span>No - Food should not be delivered</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" onclick="cancelVerification()" class="btn btn-outline">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Submit Verification</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Leaderboard -->
+                    <div class="card leaderboard">
+                        <h2 class="card-title">
+                            <i class="fas fa-trophy"></i>
+                            Volunteer Leaderboard
+                        </h2>
+                        <div id="leaderboardList" class="leaderboard-list">
+                            <!-- Leaderboard will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Verifications -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-history"></i>
+                        My Verification History
+                    </h2>
+                    <div class="table-container">
+                        <table class="verifications-table">
+                            <thead>
+                                <tr>
+                                    <th>Food Item</th>
+                                    <th>Donor</th>
+                                    <th>Verified Date</th>
+                                    <th>Condition</th>
+                                    <th>Points Earned</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="verificationsTableBody">
+                                <!-- Table rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Points & Rewards -->
+                <div class="card points-rewards">
+                    <h2 class="card-title">
+                        <i class="fas fa-gift"></i>
+                        Points & Rewards
+                    </h2>
+                    <div class="points-info">
+                        <div class="current-points">
+                            <h3>Current Points: <span id="currentPoints">0</span></h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <p>Next reward at <span id="nextReward">100</span> points</p>
+                        </div>
+                        <div class="rewards-list">
+                            <h4>Available Rewards:</h4>
+                            <div class="reward-item">
+                                <span class="reward-points">100 pts</span>
+                                <span class="reward-desc">Certificate of Appreciation</span>
+                            </div>
+                            <div class="reward-item">
+                                <span class="reward-points">250 pts</span>
+                                <span class="reward-desc">FoodWise T-Shirt</span>
+                            </div>
+                            <div class="reward-item">
+                                <span class="reward-points">500 pts</span>
+                                <span class="reward-desc">Community Service Hours Certificate</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check authentication
+        const currentUser = getCurrentUser();
+        if (!currentUser || currentUser.role !== 'volunteer') {
+            window.location.href = 'login.html';
+        }
+
+        // Display user info
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userPoints').textContent = `${currentUser.points || 0} pts`;
+
+        // Load available donations
+        function loadAvailableDonations() {
+            const donations = getFromStorage('donations') || [];
+            const availableDonations = donations.filter(d => d.status === 'pending');
+            
+            const donationsList = document.getElementById('availableDonationsList');
+            
+            if (availableDonations.length === 0) {
+                donationsList.innerHTML = '<p class="no-data">No donations available for verification at the moment.</p>';
+            } else {
+                donationsList.innerHTML = availableDonations.map(donation => `
+                    <div class="donation-card" data-id="${donation.id}">
+                        <div class="donation-header">
+                            <h4>${donation.foodName}</h4>
+                            <span class="status status-pending">Pending</span>
+                        </div>
+                        <div class="donation-details">
+                            <p><i class="fas fa-store"></i> ${donation.businessName || donation.donorName}</p>
+                            <p><i class="fas fa-box"></i> ${donation.quantity}</p>
+                            <p><i class="fas fa-clock"></i> ${formatDate(donation.pickupTime)}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> ${donation.location.substring(0, 50)}...</p>
+                            ${donation.description ? `<p><i class="fas fa-info-circle"></i> ${donation.description.substring(0, 80)}...</p>` : ''}
+                        </div>
+                        <div class="donation-actions">
+                            <button onclick="selectForVerification('${donation.id}')" class="btn btn-primary">
+                                <i class="fas fa-check"></i> Verify This Donation
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Select donation for verification
+        function selectForVerification(donationId) {
+            const donations = getFromStorage('donations') || [];
+            const donation = donations.find(d => d.id === donationId);
+            
+            if (donation) {
+                document.getElementById('selectedDonationId').value = donationId;
+                document.getElementById('actualQuantity').value = donation.quantity;
+                
+                document.getElementById('selectedDonationInfo').innerHTML = `
+                    <div class="selected-donation">
+                        <h4>${donation.foodName}</h4>
+                        <p><strong>Donor:</strong> ${donation.businessName || donation.donorName}</p>
+                        <p><strong>Quantity:</strong> ${donation.quantity}</p>
+                        <p><strong>Pickup:</strong> ${formatDate(donation.pickupTime)}</p>
+                        <p><strong>Location:</strong> ${donation.location}</p>
+                        ${donation.description ? `<p><strong>Description:</strong> ${donation.description}</p>` : ''}
+                    </div>
+                `;
+                
+                document.querySelector('.available-donations').style.display = 'none';
+                document.getElementById('verificationForm').style.display = 'block';
+                
+                // Scroll to verification form
+                document.getElementById('verificationForm').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Cancel verification
+        function cancelVerification() {
+            document.querySelector('.available-donations').style.display = 'block';
+            document.getElementById('verificationForm').style.display = 'none';
+            document.getElementById('verifyForm').reset();
+        }
+
+        // Handle verification form submission
+        document.getElementById('verifyForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const verificationData = Object.fromEntries(formData);
+            
+            const donationId = verificationData.selectedDonationId;
+            
+            // Update donation status
+            const donations = getFromStorage('donations') || [];
+            const donationIndex = donations.findIndex(d => d.id === donationId);
+            
+            if (donationIndex !== -1) {
+                donations[donationIndex].status = verificationData.recommendDelivery === 'yes' ? 'verified' : 'rejected';
+                donations[donationIndex].volunteerId = currentUser.id;
+                donations[donationIndex].verificationDate = new Date().toISOString();
+                donations[donationIndex].verificationData = verificationData;
+                
+                saveToStorage('donations', donations);
+                
+                // Award points to volunteer
+                const points = verificationData.recommendDelivery === 'yes' ? 25 : 10;
+                currentUser.points = (currentUser.points || 0) + points;
+                
+                // Update user in storage
+                const users = getFromStorage('users') || [];
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                if (userIndex !== -1) {
+                    users[userIndex].points = currentUser.points;
+                    saveToStorage('users', users);
+                    setCurrentUser(users[userIndex]);
+                }
+                
+                showMessage(`Verification submitted successfully! You earned ${points} points.`, 'success');
+                
+                // Reset form and reload data
+                cancelVerification();
+                loadAvailableDonations();
+                loadVerificationHistory();
+                updateStats();
+                loadLeaderboard();
+                updatePointsDisplay();
+            }
+        });
+
+        // Load verification history
+        function loadVerificationHistory() {
+            const donations = getFromStorage('donations') || [];
+            const myVerifications = donations.filter(d => d.volunteerId === currentUser.id);
+            
+            const tableBody = document.getElementById('verificationsTableBody');
+            
+            if (myVerifications.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="no-data">No verifications yet</td></tr>';
+            } else {
+                const users = getFromStorage('users') || [];
+                
+                tableBody.innerHTML = myVerifications.reverse().map(verification => {
+                    const donor = users.find(u => u.id === verification.donorId);
+                    const points = verification.verificationData?.recommendDelivery === 'yes' ? 25 : 10;
+                    
+                    return `
+                        <tr>
+                            <td>${verification.foodName}</td>
+                            <td>${donor ? donor.name : 'Unknown'}</td>
+                            <td>${formatDate(verification.verificationDate)}</td>
+                            <td><span class="condition condition-${verification.verificationData?.foodCondition}">${verification.verificationData?.foodCondition || 'N/A'}</span></td>
+                            <td><span class="points">+${points}</span></td>
+                            <td><span class="status status-${verification.status}">${verification.status.charAt(0).toUpperCase() + verification.status.slice(1)}</span></td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Load leaderboard
+        function loadLeaderboard() {
+            const users = getFromStorage('users') || [];
+            const volunteers = users.filter(u => u.role === 'volunteer' && u.points > 0)
+                                  .sort((a, b) => (b.points || 0) - (a.points || 0))
+                                  .slice(0, 10);
+            
+            const leaderboardList = document.getElementById('leaderboardList');
+            
+            if (volunteers.length === 0) {
+                leaderboardList.innerHTML = '<p class="no-data">No volunteers with points yet</p>';
+            } else {
+                leaderboardList.innerHTML = volunteers.map((volunteer, index) => `
+                    <div class="leaderboard-item ${volunteer.id === currentUser.id ? 'current-user' : ''}">
+                        <div class="rank">#${index + 1}</div>
+                        <div class="volunteer-info">
+                            <div class="volunteer-name">${volunteer.name}</div>
+                            <div class="volunteer-university">${volunteer.university || 'Unknown University'}</div>
+                        </div>
+                        <div class="volunteer-points">${volunteer.points || 0} pts</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const donations = getFromStorage('donations') || [];
+            const myVerifications = donations.filter(d => d.volunteerId === currentUser.id);
+            
+            const totalVerifications = myVerifications.length;
+            const points = currentUser.points || 0;
+            const serviceHours = Math.floor(totalVerifications * 0.5); // 0.5 hours per verification
+            
+            // Calculate rank
+            const users = getFromStorage('users') || [];
+            const volunteers = users.filter(u => u.role === 'volunteer' && u.points > 0)
+                                  .sort((a, b) => (b.points || 0) - (a.points || 0));
+            const rank = volunteers.findIndex(v => v.id === currentUser.id) + 1;
+            
+            document.getElementById('totalVerifications').textContent = totalVerifications;
+            document.getElementById('volunteerPoints').textContent = points;
+            document.getElementById('serviceHours').textContent = serviceHours;
+            document.getElementById('volunteerRank').textContent = rank > 0 ? `#${rank}` : '#-';
+        }
+
+        // Update points display
+        function updatePointsDisplay() {
+            const points = currentUser.points || 0;
+            document.getElementById('currentPoints').textContent = points;
+            document.getElementById('userPoints').textContent = `${points} pts`;
+            
+            // Update progress bar
+            const nextReward = points < 100 ? 100 : points < 250 ? 250 : 500;
+            const prevReward = points < 100 ? 0 : points < 250 ? 100 : 250;
+            const progress = ((points - prevReward) / (nextReward - prevReward)) * 100;
+            
+            document.getElementById('progressFill').style.width = `${Math.min(progress, 100)}%`;
+            document.getElementById('nextReward').textContent = nextReward;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAvailableDonations();
+            loadVerificationHistory();
+            loadLeaderboard();
+            updateStats();
+            updatePointsDisplay();
+        });
+    </script>
+
+    <style>
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .user-name {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .user-points {
+            background: var(--accent-orange);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filters select {
+            padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            font-family: var(--font-family);
+        }
+
+        .donation-card {
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .donation-card:hover {
+            box-shadow: var(--shadow-medium);
+        }
+
+        .donation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .donation-header h4 {
+            color: var(--primary-green);
+            margin: 0;
+        }
+
+        .donation-details p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .donation-details i {
+            width: 16px;
+            color: var(--accent-orange);
+        }
+
+        .donation-actions {
+            margin-top: 1rem;
+        }
+
+        .selected-donation {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .selected-donation h4 {
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            transition: background 0.3s ease;
+        }
+
+        .radio-label:hover {
+            background: var(--light-gray);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .leaderboard-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .leaderboard-item.current-user {
+            background: var(--light-green);
+            background-opacity: 0.1;
+            border-radius: var(--border-radius);
+        }
+
+        .rank {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            min-width: 30px;
+        }
+
+        .volunteer-info {
+            flex: 1;
+        }
+
+        .volunteer-name {
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .volunteer-university {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            opacity: 0.7;
+        }
+
+        .volunteer-points {
+            font-weight: 600;
+            color: var(--accent-orange);
+        }
+
+        .verifications-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .verifications-table th,
+        .verifications-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .verifications-table th {
+            background: var(--light-gray);
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .condition {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .condition-excellent {
+            background: #dcfce7;
+            color: var(--primary-green);
+        }
+
+        .condition-good {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .condition-fair {
+            background: var(--light-orange);
+            color: var(--accent-orange);
+        }
+
+        .condition-poor {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .points {
+            color: var(--light-green);
+            font-weight: 600;
+        }
+
+        .points-rewards {
+            grid-column: span 2;
+        }
+
+        .current-points {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .current-points h3 {
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--light-green), var(--accent-orange));
+            transition: width 0.3s ease;
+        }
+
+        .rewards-list {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .reward-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            margin-bottom: 0.5rem;
+        }
+
+        .reward-points {
+            background: var(--accent-orange);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .points-rewards {
+                grid-column: span 1;
+            }
+
+            .user-info {
+                flex-direction: row;
+                gap: 1rem;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .leaderboard-item {
+                flex-wrap: wrap;
+            }
+
+            .verifications-table {
+                font-size: 0.8rem;
+            }
+
+            .reward-item {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+        }
+    </style>
+</body>
+</html>

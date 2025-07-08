@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - FoodWise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>FoodWise</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="admin-panel.html" class="nav-link">Dashboard</a></li>
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item">
+                    <span class="user-info">
+                        <span class="user-name" id="userName"></span>
+                        <span class="user-role">Admin</span>
+                    </span>
+                </li>
+                <li class="nav-item"><button onclick="logout()" class="btn btn-outline">Logout</button></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Admin Panel</h1>
+                <p class="dashboard-subtitle">Manage users, monitor platform activity, and oversee operations</p>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Quick Stats -->
+                <div class="stats-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-number" id="totalUsers">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="stat-number" id="totalDonations">0</div>
+                            <div class="stat-label">Total Donations</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="stat-number" id="totalDeliveries">0</div>
+                            <div class="stat-label">Deliveries Completed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-number" id="totalMeals">0</div>
+                            <div class="stat-label">Meals Provided</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="tab-navigation">
+                    <button class="tab-btn active" data-tab="overview">Overview</button>
+                    <button class="tab-btn" data-tab="users">User Management</button>
+                    <button class="tab-btn" data-tab="donations">Donations</button>
+                    <button class="tab-btn" data-tab="analytics">Analytics</button>
+                </div>
+
+                <!-- Overview Tab -->
+                <div id="overviewTab" class="tab-content active">
+                    <div class="overview-grid">
+                        <!-- Recent Activity -->
+                        <div class="card">
+                            <h2 class="card-title">
+                                <i class="fas fa-activity"></i>
+                                Recent Activity
+                            </h2>
+                            <div id="recentActivity" class="activity-list">
+                                <!-- Activity will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Pending Approvals -->
+                        <div class="card">
+                            <h2 class="card-title">
+                                <i class="fas fa-clock"></i>
+                                Pending Approvals
+                            </h2>
+                            <div id="pendingApprovals" class="approvals-list">
+                                <!-- Pending approvals will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Top Performers -->
+                        <div class="card">
+                            <h2 class="card-title">
+                                <i class="fas fa-trophy"></i>
+                                Top Performers
+                            </h2>
+                            <div id="topPerformers" class="performers-list">
+                                <!-- Top performers will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- System Alerts -->
+                        <div class="card">
+                            <h2 class="card-title">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                System Alerts
+                            </h2>
+                            <div id="systemAlerts" class="alerts-list">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>System running normally. All services operational.</span>
+                                </div>
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>3 users pending verification for over 24 hours.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Management Tab -->
+                <div id="usersTab" class="tab-content">
+                    <div class="users-section">
+                        <div class="section-header">
+                            <h3>User Management</h3>
+                            <div class="filters">
+                                <select id="roleFilter">
+                                    <option value="">All Roles</option>
+                                    <option value="donor">Donors</option>
+                                    <option value="volunteer">Volunteers</option>
+                                    <option value="delivery">Delivery Agents</option>
+                                </select>
+                                <select id="statusFilter">
+                                    <option value="">All Status</option>
+                                    <option value="verified">Verified</option>
+                                    <option value="pending">Pending</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Joined</th>
+                                        <th>Activity</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <!-- Users will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donations Tab -->
+                <div id="donationsTab" class="tab-content">
+                    <div class="donations-section">
+                        <div class="section-header">
+                            <h3>Donations Management</h3>
+                            <div class="filters">
+                                <select id="donationStatusFilter">
+                                    <option value="">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="verified">Verified</option>
+                                    <option value="in_transit">In Transit</option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                                <input type="date" id="dateFilter" placeholder="Filter by date">
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="donations-table">
+                                <thead>
+                                    <tr>
+                                        <th>Food Item</th>
+                                        <th>Donor</th>
+                                        <th>Volunteer</th>
+                                        <th>Delivery Agent</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="donationsTableBody">
+                                    <!-- Donations will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Tab -->
+                <div id="analyticsTab" class="tab-content">
+                    <div class="analytics-section">
+                        <h3>Platform Analytics</h3>
+                        
+                        <div class="analytics-grid">
+                            <!-- User Growth Chart -->
+                            <div class="card chart-card">
+                                <h4>User Growth</h4>
+                                <div class="mock-chart">
+                                    <div class="chart-bars">
+                                        <div class="bar" style="height: 30%;" data-label="Jan"></div>
+                                        <div class="bar" style="height: 45%;" data-label="Feb"></div>
+                                        <div class="bar" style="height: 60%;" data-label="Mar"></div>
+                                        <div class="bar" style="height: 75%;" data-label="Apr"></div>
+                                        <div class="bar" style="height: 90%;" data-label="May"></div>
+                                        <div class="bar" style="height: 100%;" data-label="Jun"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Donation Trends -->
+                            <div class="card chart-card">
+                                <h4>Monthly Donations</h4>
+                                <div class="mock-chart">
+                                    <div class="chart-line">
+                                        <div class="line-point" style="left: 10%; bottom: 20%;"></div>
+                                        <div class="line-point" style="left: 25%; bottom: 35%;"></div>
+                                        <div class="line-point" style="left: 40%; bottom: 50%;"></div>
+                                        <div class="line-point" style="left: 55%; bottom: 45%;"></div>
+                                        <div class="line-point" style="left: 70%; bottom: 70%;"></div>
+                                        <div class="line-point" style="left: 85%; bottom: 85%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Geographic Distribution -->
+                            <div class="card">
+                                <h4>Geographic Distribution</h4>
+                                <div class="geo-stats">
+                                    <div class="geo-item">
+                                        <span class="location">Downtown</span>
+                                        <span class="count">45%</span>
+                                    </div>
+                                    <div class="geo-item">
+                                        <span class="location">Midtown</span>
+                                        <span class="count">30%</span>
+                                    </div>
+                                    <div class="geo-item">
+                                        <span class="location">Uptown</span>
+                                        <span class="count">25%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Performance Metrics -->
+                            <div class="card">
+                                <h4>Performance Metrics</h4>
+                                <div class="metrics-list">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Avg. Verification Time</span>
+                                        <span class="metric-value">2.5 hours</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Avg. Delivery Time</span>
+                                        <span class="metric-value">4.2 hours</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Success Rate</span>
+                                        <span class="metric-value">94.5%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">User Satisfaction</span>
+                                        <span class="metric-value">4.8/5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="userModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>User Details</h3>
+                <button onclick="closeUserModal()" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="userDetails"></div>
+                <div class="modal-actions">
+                    <button id="approveUserBtn" onclick="approveUser()" class="btn btn-primary" style="display: none;">
+                        <i class="fas fa-check"></i> Approve User
+                    </button>
+                    <button id="rejectUserBtn" onclick="rejectUser()" class="btn btn-outline" style="display: none;">
+                        <i class="fas fa-times"></i> Reject User
+                    </button>
+                    <button onclick="closeUserModal()" class="btn btn-outline">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check authentication
+        const currentUser = getCurrentUser();
+        if (!currentUser || currentUser.role !== 'admin') {
+            window.location.href = 'login.html';
+        }
+
+        // Display user info
+        document.getElementById('userName').textContent = currentUser.name;
+
+        let selectedUserId = null;
+
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.getAttribute('data-tab');
+                
+                // Update active tab button
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Show/hide tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`${tab}Tab`).classList.add('active');
+                
+                // Load content based on tab
+                switch(tab) {
+                    case 'overview':
+                        loadOverviewData();
+                        break;
+                    case 'users':
+                        loadUsersData();
+                        break;
+                    case 'donations':
+                        loadDonationsData();
+                        break;
+                    case 'analytics':
+                        // Analytics is static for demo
+                        break;
+                }
+            });
+        });
+
+        // Load overview data
+        function loadOverviewData() {
+            loadRecentActivity();
+            loadPendingApprovals();
+            loadTopPerformers();
+        }
+
+        // Load recent activity
+        function loadRecentActivity() {
+            const donations = getFromStorage('donations') || [];
+            const users = getFromStorage('users') || [];
+            
+            // Create activity items from recent donations and user registrations
+            let activities = [];
+            
+            // Add recent donations
+            donations.slice(-5).forEach(donation => {
+                const donor = users.find(u => u.id === donation.donorId);
+                activities.push({
+                    type: 'donation',
+                    message: `${donor?.name || 'Unknown'} posted "${donation.foodName}"`,
+                    time: donation.createdAt,
+                    icon: 'fas fa-utensils'
+                });
+            });
+            
+            // Add recent user registrations
+            users.filter(u => u.role !== 'admin').slice(-3).forEach(user => {
+                activities.push({
+                    type: 'registration',
+                    message: `New ${user.role} registered: ${user.name}`,
+                    time: user.createdAt,
+                    icon: 'fas fa-user-plus'
+                });
+            });
+            
+            // Sort by time
+            activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+            
+            const activityList = document.getElementById('recentActivity');
+            if (activities.length === 0) {
+                activityList.innerHTML = '<p class="no-data">No recent activity</p>';
+            } else {
+                activityList.innerHTML = activities.slice(0, 10).map(activity => `
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="${activity.icon}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-message">${activity.message}</div>
+                            <div class="activity-time">${formatDate(activity.time)}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Load pending approvals
+        function loadPendingApprovals() {
+            const users = getFromStorage('users') || [];
+            const pendingUsers = users.filter(u => !u.verified && u.role !== 'admin');
+            
+            const approvalsList = document.getElementById('pendingApprovals');
+            if (pendingUsers.length === 0) {
+                approvalsList.innerHTML = '<p class="no-data">No pending approvals</p>';
+            } else {
+                approvalsList.innerHTML = pendingUsers.map(user => `
+                    <div class="approval-item">
+                        <div class="approval-info">
+                            <strong>${user.name}</strong>
+                            <span class="role-badge role-${user.role}">${user.role.charAt(0).toUpperCase() + user.role.slice(1)}</span>
+                        </div>
+                        <div class="approval-actions">
+                            <button onclick="viewUserDetails('${user.id}')" class="btn-small btn-outline">View</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Load top performers
+        function loadTopPerformers() {
+            const users = getFromStorage('users') || [];
+            const donations = getFromStorage('donations') || [];
+            
+            // Calculate performance for volunteers
+            const volunteers = users.filter(u => u.role === 'volunteer' && u.points > 0)
+                                  .sort((a, b) => (b.points || 0) - (a.points || 0))
+                                  .slice(0, 5);
+            
+            const performersList = document.getElementById('topPerformers');
+            if (volunteers.length === 0) {
+                performersList.innerHTML = '<p class="no-data">No volunteer activity yet</p>';
+            } else {
+                performersList.innerHTML = volunteers.map((volunteer, index) => `
+                    <div class="performer-item">
+                        <div class="performer-rank">#${index + 1}</div>
+                        <div class="performer-info">
+                            <strong>${volunteer.name}</strong>
+                            <span>${volunteer.points || 0} points</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Load users data
+        function loadUsersData() {
+            const users = getFromStorage('users') || [];
+            const donations = getFromStorage('donations') || [];
+            const allUsers = users.filter(u => u.role !== 'admin');
+            
+            const tableBody = document.getElementById('usersTableBody');
+            if (allUsers.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="no-data">No users found</td></tr>';
+            } else {
+                tableBody.innerHTML = allUsers.map(user => {
+                    // Calculate user activity
+                    let activity = 0;
+                    if (user.role === 'donor') {
+                        activity = donations.filter(d => d.donorId === user.id).length;
+                    } else if (user.role === 'volunteer') {
+                        activity = donations.filter(d => d.volunteerId === user.id).length;
+                    } else if (user.role === 'delivery') {
+                        activity = donations.filter(d => d.deliveryId === user.id).length;
+                    }
+                    
+                    return `
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <strong>${user.name}</strong>
+                                    <br><small>${user.email}</small>
+                                </div>
+                            </td>
+                            <td><span class="role-badge role-${user.role}">${user.role.charAt(0).toUpperCase() + user.role.slice(1)}</span></td>
+                            <td><span class="status status-${user.verified ? 'verified' : 'pending'}">${user.verified ? 'Verified' : 'Pending'}</span></td>
+                            <td>${formatDate(user.createdAt)}</td>
+                            <td>${activity} ${user.role === 'donor' ? 'donations' : user.role === 'volunteer' ? 'verifications' : 'deliveries'}</td>
+                            <td>
+                                <div class="actions">
+                                    <button onclick="viewUserDetails('${user.id}')" class="btn-small btn-outline">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Load donations data
+        function loadDonationsData() {
+            const donations = getFromStorage('donations') || [];
+            const users = getFromStorage('users') || [];
+            
+            const tableBody = document.getElementById('donationsTableBody');
+            if (donations.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" class="no-data">No donations found</td></tr>';
+            } else {
+                tableBody.innerHTML = donations.reverse().map(donation => {
+                    const donor = users.find(u => u.id === donation.donorId);
+                    const volunteer = users.find(u => u.id === donation.volunteerId);
+                    const deliveryAgent = users.find(u => u.id === donation.deliveryId);
+                    
+                    return `
+                        <tr>
+                            <td>
+                                <div class="food-info">
+                                    <strong>${donation.foodName}</strong>
+                                    <br><small>${donation.quantity}</small>
+                                </div>
+                            </td>
+                            <td>${donor ? donor.name : 'Unknown'}</td>
+                            <td>${volunteer ? volunteer.name : '-'}</td>
+                            <td>${deliveryAgent ? deliveryAgent.name : '-'}</td>
+                            <td><span class="status status-${donation.status}">${donation.status.charAt(0).toUpperCase() + donation.status.replace('_', ' ').slice(1)}</span></td>
+                            <td>${formatDate(donation.createdAt)}</td>
+                            <td>
+                                <div class="actions">
+                                    <button onclick="viewDonationDetails('${donation.id}')" class="btn-small btn-outline">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // View user details
+        function viewUserDetails(userId) {
+            const users = getFromStorage('users') || [];
+            const user = users.find(u => u.id === userId);
+            
+            if (user) {
+                selectedUserId = userId;
+                
+                document.getElementById('userDetails').innerHTML = `
+                    <div class="user-detail-section">
+                        <h4>Personal Information</h4>
+                        <p><strong>Name:</strong> ${user.name}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>Phone:</strong> ${user.phone || 'Not provided'}</p>
+                        <p><strong>Role:</strong> ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
+                        <p><strong>Status:</strong> ${user.verified ? 'Verified' : 'Pending Verification'}</p>
+                        <p><strong>Joined:</strong> ${formatDate(user.createdAt)}</p>
+                    </div>
+                    
+                    ${user.role === 'donor' ? `
+                        <div class="user-detail-section">
+                            <h4>Business Information</h4>
+                            <p><strong>Business Name:</strong> ${user.businessName || 'Not provided'}</p>
+                            <p><strong>Business Type:</strong> ${user.businessType || 'Not provided'}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${user.role === 'volunteer' ? `
+                        <div class="user-detail-section">
+                            <h4>Academic Information</h4>
+                            <p><strong>University:</strong> ${user.university || 'Not provided'}</p>
+                            <p><strong>Student ID:</strong> ${user.studentId || 'Not provided'}</p>
+                            <p><strong>Points:</strong> ${user.points || 0}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${user.role === 'delivery' ? `
+                        <div class="user-detail-section">
+                            <h4>Vehicle Information</h4>
+                            <p><strong>Vehicle Type:</strong> ${user.vehicle || 'Not provided'}</p>
+                            <p><strong>License Number:</strong> ${user.licenseNumber || 'Not provided'}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="user-detail-section">
+                        <h4>Address</h4>
+                        <p>${user.address || 'Not provided'}</p>
+                    </div>
+                `;
+                
+                // Show/hide action buttons based on verification status
+                if (!user.verified) {
+                    document.getElementById('approveUserBtn').style.display = 'inline-block';
+                    document.getElementById('rejectUserBtn').style.display = 'inline-block';
+                } else {
+                    document.getElementById('approveUserBtn').style.display = 'none';
+                    document.getElementById('rejectUserBtn').style.display = 'none';
+                }
+                
+                document.getElementById('userModal').style.display = 'flex';
+            }
+        }
+
+        // Approve user
+        function approveUser() {
+            if (selectedUserId) {
+                const users = getFromStorage('users') || [];
+                const userIndex = users.findIndex(u => u.id === selectedUserId);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].verified = true;
+                    saveToStorage('users', users);
+                    
+                    showMessage('User approved successfully!', 'success');
+                    closeUserModal();
+                    loadPendingApprovals();
+                    loadUsersData();
+                }
+            }
+        }
+
+        // Reject user
+        function rejectUser() {
+            if (selectedUserId && confirm('Are you sure you want to reject this user? This action cannot be undone.')) {
+                const users = getFromStorage('users') || [];
+                const updatedUsers = users.filter(u => u.id !== selectedUserId);
+                saveToStorage('users', updatedUsers);
+                
+                showMessage('User rejected and removed from the system.', 'success');
+                closeUserModal();
+                loadPendingApprovals();
+                loadUsersData();
+            }
+        }
+
+        // Close user modal
+        function closeUserModal() {
+            document.getElementById('userModal').style.display = 'none';
+            selectedUserId = null;
+        }
+
+        // View donation details
+        function viewDonationDetails(donationId) {
+            const donations = getFromStorage('donations') || [];
+            const donation = donations.find(d => d.id === donationId);
+            
+            if (donation) {
+                const users = getFromStorage('users') || [];
+                const donor = users.find(u => u.id === donation.donorId);
+                const volunteer = users.find(u => u.id === donation.volunteerId);
+                const deliveryAgent = users.find(u => u.id === donation.deliveryId);
+                
+                alert(`
+Donation Details:
+
+Food: ${donation.foodName}
+Quantity: ${donation.quantity}
+Description: ${donation.description || 'No description'}
+Pickup Time: ${formatDate(donation.pickupTime)}
+Location: ${donation.location}
+Status: ${donation.status.charAt(0).toUpperCase() + donation.status.replace('_', ' ').slice(1)}
+
+Donor: ${donor ? donor.name : 'Unknown'}
+Volunteer: ${volunteer ? volunteer.name : 'Not assigned'}
+Delivery Agent: ${deliveryAgent ? deliveryAgent.name : 'Not assigned'}
+
+Created: ${formatDate(donation.createdAt)}
+${donation.verificationDate ? `Verified: ${formatDate(donation.verificationDate)}` : ''}
+${donation.deliveryDate ? `Delivered: ${formatDate(donation.deliveryDate)}` : ''}
+                `);
+            }
+        }
+
+        // Update platform statistics
+        function updateStats() {
+            const users = getFromStorage('users') || [];
+            const donations = getFromStorage('donations') || [];
+            
+            const totalUsers = users.filter(u => u.role !== 'admin').length;
+            const totalDonations = donations.length;
+            const totalDeliveries = donations.filter(d => d.status === 'delivered').length;
+            const totalMeals = totalDeliveries * 25; // Estimate 25 meals per delivery
+            
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('totalDonations').textContent = totalDonations;
+            document.getElementById('totalDeliveries').textContent = totalDeliveries;
+            document.getElementById('totalMeals').textContent = totalMeals;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+            loadOverviewData();
+        });
+
+        // Auto-refresh every 60 seconds
+        setInterval(() => {
+            updateStats();
+            if (document.querySelector('.tab-btn.active').getAttribute('data-tab') === 'overview') {
+                loadOverviewData();
+            }
+        }, 60000);
+    </script>
+
+    <style>
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .user-name {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .user-role {
+            background: var(--accent-orange);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tab-navigation {
+            display: flex;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 4px;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--white);
+            color: var(--primary-green);
+            box-shadow: var(--shadow-light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .activity-list, .approvals-list, .performers-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--light-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-message {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            opacity: 0.7;
+        }
+
+        .approval-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .approval-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .role-donor {
+            background: #dcfce7;
+            color: var(--primary-green);
+        }
+
+        .role-volunteer {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .role-delivery {
+            background: var(--light-orange);
+            color: var(--accent-orange);
+        }
+
+        .performer-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .performer-rank {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            min-width: 30px;
+        }
+
+        .alerts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+        }
+
+        .alert-info {
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        .alert-warning {
+            background: #fffbeb;
+            color: #d97706;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filters select, .filters input {
+            padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            font-family: var(--font-family);
+        }
+
+        .users-table, .donations-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .users-table th, .users-table td,
+        .donations-table th, .donations-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .users-table th, .donations-table th {
+            background: var(--light-gray);
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius-large);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--primary-green);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .user-detail-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .user-detail-section:last-child {
+            border-bottom: none;
+        }
+
+        .user-detail-section h4 {
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .chart-card {
+            padding: 2rem;
+        }
+
+        .mock-chart {
+            height: 200px;
+            position: relative;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 100%;
+            padding: 2rem 1rem 1rem;
+        }
+
+        .bar {
+            width: 30px;
+            background: linear-gradient(to top, var(--primary-green), var(--light-green));
+            border-radius: 4px 4px 0 0;
+            position: relative;
+        }
+
+        .chart-line {
+            position: relative;
+            height: 100%;
+        }
+
+        .line-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-orange);
+            border-radius: 50%;
+        }
+
+        .geo-stats, .metrics-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .geo-item, .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                flex-direction: row;
+                gap: 1rem;
+            }
+
+            .tab-navigation {
+                flex-wrap: wrap;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .filters {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>
