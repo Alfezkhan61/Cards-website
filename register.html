@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - FoodWise</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="icon.jpg" alt="FoodWise Logo" class="logo-img">
+                <span class="logo-text">FoodWise</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Registration Section -->
+    <section class="auth-section">
+        <div class="auth-container">
+            <div class="auth-content">
+                <div class="auth-image">
+                    <div class="auth-image-container">
+                        <img src="icon.jpg" alt="FoodWise Community" class="auth-img">
+                        <div class="auth-overlay">
+                            <h2>Join FoodWise!</h2>
+                            <p>Be part of the movement to save food and feed lives.</p>
+                            <div class="auth-stats">
+                                <div class="auth-stat">
+                                    <i class="fas fa-utensils"></i>
+                                    <span>97+ Partner Organizations</span>
+                                </div>
+                                <div class="auth-stat">
+                                    <i class="fas fa-recycle"></i>
+                                    <span>8,293kg Food Rescued</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-form-container">
+                    <div class="auth-form-content">
+                        <div class="auth-header">
+                            <h1>Create Account</h1>
+                            <p>Join thousands making a difference</p>
+                        </div>
+
+                        <!-- Role Selection -->
+                        <div class="role-selection" id="roleSelection">
+                            <h3>I want to join as:</h3>
+                            <div class="role-cards">
+                                <div class="role-card" data-role="donor">
+                                    <div class="role-icon">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                    <h4>Donor</h4>
+                                    <p>Restaurant or Event Organizer</p>
+                                </div>
+                                <div class="role-card" data-role="volunteer">
+                                    <div class="role-icon">
+                                        <i class="fas fa-user-graduate"></i>
+                                    </div>
+                                    <h4>Volunteer</h4>
+                                    <p>Student Volunteer</p>
+                                </div>
+                                <div class="role-card" data-role="delivery">
+                                    <div class="role-icon">
+                                        <i class="fas fa-shipping-fast"></i>
+                                    </div>
+                                    <h4>Delivery Agent</h4>
+                                    <p>Pickup & Delivery Partner</p>
+                                </div>
+                                <div class="role-card" data-role="admin">
+                                    <div class="role-icon">
+                                        <i class="fas fa-crown"></i>
+                                    </div>
+                                    <h4>Admin</h4>
+                                    <p>Platform Administrator</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Registration Form -->
+                        <form class="auth-form" id="registerForm" style="display: none;">
+                            <div class="selected-role" id="selectedRole">
+                                <div class="role-badge">
+                                    <i class="fas fa-utensils" id="selectedRoleIcon"></i>
+                                    <span id="selectedRoleText">Donor</span>
+                                    <button type="button" class="change-role" onclick="showRoleSelection()">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Basic Information -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <div class="input-group">
+                                        <i class="fas fa-user"></i>
+                                        <input 
+                                            type="text" 
+                                            id="firstName" 
+                                            name="firstName" 
+                                            placeholder="First name"
+                                            required
+                                        >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <div class="input-group">
+                                        <i class="fas fa-user"></i>
+                                        <input 
+                                            type="text" 
+                                            id="lastName" 
+                                            name="lastName" 
+                                            placeholder="Last name"
+                                            required
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <div class="input-group">
+                                    <i class="fas fa-envelope"></i>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        name="email" 
+                                        placeholder="Enter your email"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <div class="input-group">
+                                    <i class="fas fa-phone"></i>
+                                    <input 
+                                        type="tel" 
+                                        id="phone" 
+                                        name="phone" 
+                                        placeholder="Enter your phone number"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <div class="input-group">
+                                    <i class="fas fa-lock"></i>
+                                    <input 
+                                        type="password" 
+                                        id="password" 
+                                        name="password" 
+                                        placeholder="Create a password"
+                                        required
+                                    >
+                                    <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <div class="input-group">
+                                    <i class="fas fa-lock"></i>
+                                    <input 
+                                        type="password" 
+                                        id="confirmPassword" 
+                                        name="confirmPassword" 
+                                        placeholder="Confirm your password"
+                                        required
+                                    >
+                                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Role-specific fields -->
+                            <div class="role-specific-fields" id="roleSpecificFields">
+                                <!-- Donor-specific fields -->
+                                <div class="role-fields donor-fields">
+                                    <div class="form-group">
+                                        <label for="businessName">Business Name</label>
+                                        <div class="input-group">
+                                            <i class="fas fa-building"></i>
+                                            <input 
+                                                type="text" 
+                                                id="businessName" 
+                                                name="businessName" 
+                                                placeholder="Restaurant/Organization name"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="businessType">Business Type</label>
+                                        <div class="input-group">
+                                            <i class="fas fa-tags"></i>
+                                            <select id="businessType" name="businessType">
+                                                <option value="">Select business type</option>
+                                                <option value="restaurant">Restaurant</option>
+                                                <option value="catering">Catering Service</option>
+                                                <option value="event">Event Organizer</option>
+                                                <option value="hotel">Hotel</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Volunteer-specific fields -->
+                                <div class="role-fields volunteer-fields">
+                                    <div class="form-group">
+                                        <label for="university">University/College</label>
+                                        <div class="input-group">
+                                            <i class="fas fa-graduation-cap"></i>
+                                            <input 
+                                                type="text" 
+                                                id="university" 
+                                                name="university" 
+                                                placeholder="Your university or college"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="studentId">Student ID</label>
+                                        <div class="input-group">
+                                            <i class="fas fa-id-card"></i>
+                                            <input 
+                                                type="text" 
+                                                id="studentId" 
+                                                name="studentId" 
+                                                placeholder="Your student ID"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Delivery-specific fields -->
+                                <div class="role-fields delivery-fields">
+                                    <div class="form-group">
+                                        <label for="vehicleType">Vehicle Type</label>
+                                        <div class="input-group">
+                                            <i class="fas fa-motorcycle"></i>
+                                            <select id="vehicleType" name="vehicleType">
+                                                <option value="">Select vehicle type</option>
+                                                <option value="bike">Bike</option>
+                                                <option value="motorcycle">Motorcycle</option>
+                                                <option value="car">Car</option>
+                                                <option value="van">Van</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="licenseNumber">License Number</label>
+                                        <div class="input-group">
+                                            <i class="fas fa-id-card"></i>
+                                            <input 
+                                                type="text" 
+                                                id="licenseNumber" 
+                                                name="licenseNumber" 
+                                                placeholder="Your license number"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Admin-specific fields -->
+                                <div class="role-fields admin-fields">
+                                    <div class="form-group">
+                                        <label for="adminCode">Admin Access Code</label>
+                                        <div class="input-group">
+                                            <i class="fas fa-key"></i>
+                                            <input 
+                                                type="password" 
+                                                id="adminCode" 
+                                                name="adminCode" 
+                                                placeholder="Enter admin access code"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="department">Department</label>
+                                        <div class="input-group">
+                                            <i class="fas fa-building"></i>
+                                            <input 
+                                                type="text" 
+                                                id="department" 
+                                                name="department" 
+                                                placeholder="Your department"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <div class="input-group">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <textarea 
+                                        id="address" 
+                                        name="address" 
+                                        placeholder="Enter your complete address"
+                                        rows="3"
+                                        required
+                                    ></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Terms and Conditions -->
+                            <div class="form-group">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" name="terms" required>
+                                    <span class="checkmark"></span>
+                                    I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" name="newsletter">
+                                    <span class="checkmark"></span>
+                                    Subscribe to newsletter for updates and tips
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary auth-submit">
+                                <i class="fas fa-user-plus"></i>
+                                Create Account
+                            </button>
+                        </form>
+
+                        <div class="auth-footer">
+                            <p>Already have an account? <a href="login.html">Sign in here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="scripts/auth.js"></script>
+</body>
+</html>
