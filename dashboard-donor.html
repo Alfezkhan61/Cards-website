@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Dashboard - FoodWise</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="dashboard-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="icon.jpg" alt="FoodWise Logo" class="logo-img">
+                <span class="logo-text">FoodWise</span>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Loading...</span>
+                        <span class="user-role">Donor</span>
+                    </div>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-icon" onclick="toggleNotifications()" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn-icon" onclick="toggleUserMenu()" title="User Menu">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-menu" id="userMenu">
+                            <a href="#" onclick="editProfile()">
+                                <i class="fas fa-user-edit"></i>
+                                Edit Profile
+                            </a>
+                            <a href="#" onclick="viewSettings()">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <a href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-menu">
+                <a href="#overview" class="menu-item active" data-section="overview">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="#donate" class="menu-item" data-section="donate">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Create Donation</span>
+                </a>
+                <a href="#manage" class="menu-item" data-section="manage">
+                    <i class="fas fa-list"></i>
+                    <span>Manage Donations</span>
+                </a>
+                <a href="#analytics" class="menu-item" data-section="analytics">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#profile" class="menu-item" data-section="profile">
+                    <i class="fas fa-building"></i>
+                    <span>Business Profile</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Overview Section -->
+        <section class="content-section active" id="overview">
+            <div class="section-header">
+                <h1>Dashboard Overview</h1>
+                <p>Welcome back! Here's what's happening with your donations.</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>23</h3>
+                        <p>Total Donations</p>
+                        <span class="stat-change positive">+12% this month</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>5</h3>
+                        <p>Pending Verification</p>
+                        <span class="stat-change neutral">Awaiting volunteers</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>18</h3>
+                        <p>Successfully Delivered</p>
+                        <span class="stat-change positive">+3 this week</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>127</h3>
+                        <p>People Fed</p>
+                        <span class="stat-change positive">This month</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Donations</h3>
+                        <button class="btn btn-outline btn-sm" onclick="switchSection('manage')">
+                            View All
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon verified">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h4>Fresh Vegetable Surplus</h4>
+                                    <p>Verified and ready for pickup</p>
+                                    <span class="activity-time">2 hours ago</span>
+                                </div>
+                                <div class="activity-status">
+                                    <span class="status-badge verified">Verified</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon pending">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h4>Wedding Buffet Leftovers</h4>
+                                    <p>Awaiting volunteer verification</p>
+                                    <span class="activity-time">4 hours ago</span>
+                                </div>
+                                <div class="activity-status">
+                                    <span class="status-badge pending">Pending</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon delivered">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h4>Restaurant Daily Surplus</h4>
+                                    <p>Successfully delivered to Local Food Bank</p>
+                                    <span class="activity-time">Yesterday</span>
+                                </div>
+                                <div class="activity-status">
+                                    <span class="status-badge delivered">Delivered</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Impact Summary</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="impact-metrics">
+                            <div class="impact-item">
+                                <div class="impact-number">156kg</div>
+                                <div class="impact-label">Food Rescued</div>
+                            </div>
+                            <div class="impact-item">
+                                <div class="impact-number">312</div>
+                                <div class="impact-label">Meals Provided</div>
+                            </div>
+                            <div class="impact-item">
+                                <div class="impact-number">₹18,240</div>
+                                <div class="impact-label">Tax Savings</div>
+                            </div>
+                        </div>
+                        <div class="impact-chart">
+                            <canvas id="impactChart" width="300" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Donation Section -->
+        <section class="content-section" id="donate">
+            <div class="section-header">
+                <h1>Create New Donation</h1>
+                <p>List your surplus food to help those in need.</p>
+            </div>
+
+            <div class="donation-form-container">
+                <form class="donation-form" id="donationForm">
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3>Food Details</h3>
+                            
+                            <div class="form-group">
+                                <label for="foodName">Food Name/Description *</label>
+                                <input 
+                                    type="text" 
+                                    id="foodName" 
+                                    name="foodName" 
+                                    placeholder="e.g., Fresh vegetables, Cooked rice, Wedding buffet"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="foodType">Food Type *</label>
+                                    <select id="foodType" name="foodType" required>
+                                        <option value="">Select food type</option>
+                                        <option value="raw">Raw Ingredients</option>
+                                        <option value="cooked">Cooked Food</option>
+                                        <option value="packaged">Packaged Items</option>
+                                        <option value="beverages">Beverages</option>
+                                        <option value="dairy">Dairy Products</option>
+                                        <option value="bakery">Bakery Items</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantity">Quantity *</label>
+                                    <input 
+                                        type="text" 
+                                        id="quantity" 
+                                        name="quantity" 
+                                        placeholder="e.g., 10kg, 50 plates, 20 boxes"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="servings">Estimated Servings</label>
+                                    <input 
+                                        type="number" 
+                                        id="servings" 
+                                        name="servings" 
+                                        placeholder="e.g., 50"
+                                        min="1"
+                                    >
+                                </div>
+                                <div class="form-group">
+                                    <label for="expiryTime">Best Before *</label>
+                                    <input 
+                                        type="datetime-local" 
+                                        id="expiryTime" 
+                                        name="expiryTime" 
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="foodImage">Upload Food Image</label>
+                                <div class="file-upload" onclick="document.getElementById('foodImage').click()">
+                                    <input type="file" id="foodImage" name="foodImage" accept="image/*" style="display: none;">
+                                    <div class="upload-content">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Click to upload image or drag and drop</p>
+                                        <span>PNG, JPG up to 5MB</span>
+                                    </div>
+                                </div>
+                                <div class="image-preview" id="imagePreview" style="display: none;">
+                                    <img id="previewImg" src="" alt="Food preview">
+                                    <button type="button" class="remove-image" onclick="removeImage()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Pickup Details</h3>
+                            
+                            <div class="form-group">
+                                <label for="pickupTime">Preferred Pickup Time *</label>
+                                <input 
+                                    type="datetime-local" 
+                                    id="pickupTime" 
+                                    name="pickupTime" 
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pickupAddress">Pickup Address *</label>
+                                <textarea 
+                                    id="pickupAddress" 
+                                    name="pickupAddress" 
+                                    rows="3"
+                                    placeholder="Enter complete pickup address"
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contactPerson">Contact Person</label>
+                                <input 
+                                    type="text" 
+                                    id="contactPerson" 
+                                    name="contactPerson" 
+                                    placeholder="Name of contact person"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contactPhone">Contact Phone *</label>
+                                <input 
+                                    type="tel" 
+                                    id="contactPhone" 
+                                    name="contactPhone" 
+                                    placeholder="Contact phone number"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="specialInstructions">Special Instructions</label>
+                                <textarea 
+                                    id="specialInstructions" 
+                                    name="specialInstructions" 
+                                    rows="3"
+                                    placeholder="Any special handling or pickup instructions"
+                                ></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" name="urgent" id="urgent">
+                                    <span class="checkmark"></span>
+                                    Mark as urgent (expires within 2 hours)
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" name="terms" required>
+                                    <span class="checkmark"></span>
+                                    I confirm the food is safe for consumption and follow hygiene standards
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="clearForm()">
+                            Clear Form
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Create Donation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Manage Donations Section -->
+        <section class="content-section" id="manage">
+            <div class="section-header">
+                <h1>Manage Donations</h1>
+                <p>Track and manage all your food donations.</p>
+            </div>
+
+            <div class="filters-section">
+                <div class="filter-group">
+                    <label for="statusFilter">Filter by Status:</label>
+                    <select id="statusFilter" onchange="filterDonations()">
+                        <option value="all">All Donations</option>
+                        <option value="pending">Pending Verification</option>
+                        <option value="verified">Verified</option>
+                        <option value="picked_up">Picked Up</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="expired">Expired</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="dateFilter">Filter by Date:</label>
+                    <select id="dateFilter" onchange="filterDonations()">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="switchSection('donate')">
+                    <i class="fas fa-plus"></i>
+                    New Donation
+                </button>
+            </div>
+
+            <div class="donations-container">
+                <div class="donations-grid" id="donationsGrid">
+                    <!-- Donations will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="content-section" id="analytics">
+            <div class="section-header">
+                <h1>Analytics & Impact</h1>
+                <p>View your food donation impact and statistics.</p>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3>Monthly Donations</h3>
+                    <canvas id="monthlyChart" width="400" height="200"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Food Types Distribution</h3>
+                    <canvas id="foodTypesChart" width="400" height="200"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Impact Timeline</h3>
+                    <canvas id="impactTimeline" width="400" height="200"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Delivery Success Rate</h3>
+                    <canvas id="successRate" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section class="content-section" id="profile">
+            <div class="section-header">
+                <h1>Business Profile</h1>
+                <p>Manage your business information and preferences.</p>
+            </div>
+
+            <div class="profile-container">
+                <div class="profile-form">
+                    <form id="profileForm">
+                        <div class="form-section">
+                            <h3>Business Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="businessName">Business Name</label>
+                                    <input type="text" id="businessNameProfile" name="businessName" value="Spice Garden Restaurant">
+                                </div>
+                                <div class="form-group">
+                                    <label for="businessType">Business Type</label>
+                                    <select id="businessTypeProfile" name="businessType">
+                                        <option value="restaurant" selected>Restaurant</option>
+                                        <option value="catering">Catering Service</option>
+                                        <option value="event">Event Organizer</option>
+                                        <option value="hotel">Hotel</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="businessAddress">Address</label>
+                                <textarea id="businessAddress" name="businessAddress" rows="3">123 Food Street, Mumbai, Maharashtra 400001</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Contact Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contactEmail">Email</label>
+                                    <input type="email" id="contactEmail" name="contactEmail" value="demo@donor.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactPhoneProfile">Phone</label>
+                                    <input type="tel" id="contactPhoneProfile" name="contactPhone" value="+91 98765 43210">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Notification Panel -->
+    <div class="notification-panel" id="notificationPanel">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <button class="btn-icon" onclick="toggleNotifications()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="notification-list">
+            <div class="notification-item unread">
+                <div class="notification-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="notification-content">
+                    <h4>Food Verified</h4>
+                    <p>Your fresh vegetable donation has been verified and is ready for pickup.</p>
+                    <span class="notification-time">2 hours ago</span>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="notification-content">
+                    <h4>Pickup Scheduled</h4>
+                    <p>Delivery agent will arrive at 3:00 PM today for your wedding buffet donation.</p>
+                    <span class="notification-time">4 hours ago</span>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="notification-content">
+                    <h4>Impact Update</h4>
+                    <p>Your donations this month have fed 127 people. Thank you for making a difference!</p>
+                    <span class="notification-time">1 day ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <script src="scripts/dashboard.js"></script>
+</body>
+</html>
